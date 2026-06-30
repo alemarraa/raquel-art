@@ -1,4 +1,3 @@
-import Nav from './components/Nav'
 import Hero from './components/Hero'
 import Gallery from './components/Gallery'
 import Available from './components/Available'
@@ -10,7 +9,6 @@ import Footer from './components/Footer'
 export default function App() {
   return (
     <>
-      <Nav />
       <Hero />
       <Gallery />
       <Available />

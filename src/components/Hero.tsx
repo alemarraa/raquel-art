@@ -1,80 +1,182 @@
-import { useEffect, useRef } from 'react'
+import { useRef, useState } from 'react'
+import { motion, AnimatePresence, useInView } from 'framer-motion'
+import { Menu, X } from 'lucide-react'
 
 const VIDEO_URL =
-  'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260328_083109_283f3553-e28f-428b-a723-d639c617eb2b.mp4'
+  'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260619_191346_9d19d66e-86a4-47f7-8dc6-712c1788c3b2.mp4'
 
-export default function Hero() {
-  const videoRef = useRef<HTMLVideoElement>(null)
-  const rafRef = useRef<number>(0)
+const navLinks = [
+  { label: 'Wander', href: '#gallery' },
+  { label: 'Archive', href: '#available' },
+  { label: 'Story', href: '#about' },
+  { label: 'Connect', href: '#contact' },
+]
 
-  useEffect(() => {
-    const video = videoRef.current
-    if (!video) return
-
-    const FADE_SECONDS = 1.2
-
-    function tick() {
-      if (!video) return
-      const t = video.currentTime
-      const dur = video.duration || 0
-
-      if (dur > 0) {
-        const fadeIn = Math.min(1, t / FADE_SECONDS)
-        const fadeOut = dur - t < FADE_SECONDS ? Math.max(0, (dur - t) / FADE_SECONDS) : 1
-        video.style.opacity = String(Math.min(fadeIn, fadeOut))
-      }
-
-      rafRef.current = requestAnimationFrame(tick)
-    }
-
-    rafRef.current = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(rafRef.current)
-  }, [])
+function StaggeredFade({ text }: { text: string }) {
+  const ref = useRef<HTMLSpanElement>(null)
+  const inView = useInView(ref, { once: true })
 
   return (
-    <section id="top" className="relative h-screen min-h-[600px] overflow-hidden flex items-center justify-center">
-      {/* Video */}
+    <span ref={ref} aria-label={text}>
+      {text.split('').map((char, i) => (
+        <motion.span
+          key={i}
+          aria-hidden="true"
+          variants={{ hidden: { opacity: 0 }, show: { opacity: 1 } }}
+          initial="hidden"
+          animate={inView ? 'show' : 'hidden'}
+          transition={{ duration: 0.5, delay: i * 0.07 }}
+          style={{ display: char === ' ' ? 'inline' : 'inline-block' }}
+        >
+          {char === ' ' ? ' ' : char}
+        </motion.span>
+      ))}
+    </span>
+  )
+}
+
+export default function Hero() {
+  const [menuOpen, setMenuOpen] = useState(false)
+
+  return (
+    <section
+      id="top"
+      className="relative w-full overflow-hidden"
+      style={{ height: '100vh', backgroundColor: '#010101' }}
+    >
+      {/* Video background */}
       <video
-        ref={videoRef}
         src={VIDEO_URL}
         autoPlay
         muted
         loop
         playsInline
-        className="absolute inset-0 w-full h-full object-cover"
-        style={{ opacity: 0 }}
+        className="absolute inset-0 w-full h-full object-cover object-center"
       />
 
-      {/* Gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-void/60 via-void/30 to-void/80 pointer-events-none" />
+      {/* Dark overlay */}
+      <div className="absolute inset-0 bg-black/30" />
 
-      {/* Red accent line at bottom — mirrors the real painting */}
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-crimson opacity-60" />
-
-      {/* Hero text */}
-      <div className="relative z-10 text-center px-6">
-        <p className="font-sans text-xs tracking-[0.3em] uppercase text-gold mb-6 opacity-80">
-          Original Works · Oil · Charcoal · Mixed Media
-        </p>
-        <h1 className="font-serif text-5xl sm:text-6xl lg:text-7xl text-ivory leading-none tracking-tight">
-          Raquel Alonso
-        </h1>
-        <div className="w-12 h-px bg-crimson mx-auto my-6" />
-        <p className="font-sans text-sm tracking-[0.15em] text-muted max-w-xs mx-auto leading-relaxed">
-          Surrealism · Cubism · Figurative
-        </p>
-
-        <a
-          href="#gallery"
-          className="inline-block mt-12 px-8 py-3 border border-ivory/30 text-ivory/80 text-xs tracking-[0.2em] uppercase hover:border-ivory hover:text-ivory transition-all duration-300"
+      {/* Nav */}
+      <nav className="relative z-20 flex items-center justify-between md:justify-center px-5 sm:px-8 pt-6 pb-2 md:gap-16">
+        {/* Brand */}
+        <span
+          className="text-white font-light uppercase"
+          style={{ letterSpacing: '0.25em', fontSize: '0.8rem' }}
         >
-          View Work
-        </a>
-      </div>
+          <span className="hidden sm:inline" style={{ letterSpacing: '0.3em' }}>
+            Organic Visions
+          </span>
+          <span className="sm:hidden">Organic Visions</span>
+        </span>
 
-      {/* Scroll indicator */}
-      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 opacity-40">
-        <div className="w-px h-8 bg-ivory animate-pulse" />
+        {/* Desktop links */}
+        <div className="hidden md:flex items-center gap-10">
+          {navLinks.map(l => (
+            <a
+              key={l.href}
+              href={l.href}
+              className="text-white/80 font-light uppercase hover:text-white transition-colors duration-300"
+              style={{ letterSpacing: '0.2em', fontSize: '0.7rem' }}
+            >
+              {l.label}
+            </a>
+          ))}
+        </div>
+
+        {/* Mobile hamburger */}
+        <button
+          className="md:hidden text-white p-1"
+          onClick={() => setMenuOpen(o => !o)}
+          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+        >
+          {menuOpen ? <X size={22} /> : <Menu size={22} />}
+        </button>
+      </nav>
+
+      {/* Mobile dropdown */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            key="mobile-menu"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3, ease: 'easeOut' }}
+            className="fixed top-16 left-4 right-4 z-50 md:hidden mobile-menu-glass rounded-2xl py-8 flex flex-col items-center gap-5"
+          >
+            {navLinks.map((l, i) => (
+              <motion.a
+                key={l.href}
+                href={l.href}
+                onClick={() => setMenuOpen(false)}
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.05 + i * 0.06 }}
+                className="text-white/90 font-light uppercase hover:text-white transition-colors"
+                style={{ letterSpacing: '0.25em', fontSize: '0.75rem' }}
+              >
+                {l.label}
+              </motion.a>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Hero content */}
+      <div
+        className="relative z-10 flex flex-col items-center justify-center text-center"
+        style={{
+          paddingLeft: '1.25rem',
+          paddingRight: '1.25rem',
+          paddingTop: '3rem',
+          height: 'calc(100vh - 5rem)',
+        }}
+      >
+        {/* Heading */}
+        <h1
+          className="font-garamond font-normal text-white leading-none tracking-tight mb-6 sm:mb-8"
+          style={{ lineHeight: 1.08 }}
+        >
+          <span className="block text-4xl sm:text-6xl md:text-8xl lg:text-9xl">
+            <StaggeredFade text="WITNESS THE" />
+          </span>
+          <span className="block text-4xl sm:text-6xl md:text-8xl lg:text-9xl">
+            <StaggeredFade text="HIDDEN REALM" />
+          </span>
+        </h1>
+
+        {/* Subtitle */}
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 1.6 }}
+          className="text-white/70 font-light leading-relaxed max-w-xs sm:max-w-md mb-8 sm:mb-10 text-sm sm:text-base lg:text-lg"
+        >
+          An odyssey through delicate living forms,
+          <span className="hidden sm:inline"><br /></span>
+          {' '}revealed by lens and curiosity.
+        </motion.p>
+
+        {/* CTA */}
+        <motion.a
+          href="#gallery"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 2.0 }}
+          className="liquid-glass rounded-full text-white/90 uppercase"
+          style={{
+            paddingLeft: '1.75rem',
+            paddingRight: '1.75rem',
+            paddingTop: '0.875rem',
+            paddingBottom: '0.875rem',
+            letterSpacing: '0.18em',
+            fontSize: '0.72rem',
+            textDecoration: 'none',
+          }}
+        >
+          Begin the Experience
+        </motion.a>
       </div>
     </section>
   )
