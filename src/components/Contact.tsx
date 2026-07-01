@@ -24,9 +24,10 @@ export default function Contact() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           access_key: '1dc59d8e-1288-473d-a557-21d7c8845ab3',
-          to: 'raquelalonso.maven@gmail.com',
           subject: `Art inquiry — ${data.subject}`,
           from_name: 'Raquel Alonso Art',
+          replyto: data.email,
+          cc: '2022571147@txt.att.net',
           name: data.name,
           email: data.email,
           message: data.message,
