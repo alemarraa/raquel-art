@@ -1,3 +1,5 @@
+import { asset } from '../utils/asset'
+
 const steps = [
   { n: '01', title: 'Share Your Vision', body: 'Tell me the size, subject, palette, and mood you have in mind. A reference image helps but is never required.' },
   { n: '02', title: 'Consultation', body: 'We discuss your vision in detail. I sketch initial concepts and we align on direction before any paint touches canvas.' },
@@ -40,7 +42,7 @@ export default function Custom() {
           {/* Studio image */}
           <div className="relative">
             <img
-              src="/artist/studio-close.png"
+              src={asset('/artist/studio-close.png')}
               alt="Artist at work"
               className="w-full object-cover"
               style={{ aspectRatio: '4/3' }}

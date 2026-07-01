@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { artworks, type Artwork } from '../data/artwork'
+import { asset } from '../utils/asset'
 
 export default function Gallery() {
   const [selected, setSelected] = useState<Artwork | null>(null)
@@ -26,7 +27,7 @@ export default function Gallery() {
               style={{ aspectRatio: i === 0 ? '16/9' : '4/3' }}
             >
               <img
-                src={art.image}
+                src={asset(art.image)}
                 alt={art.title}
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               />

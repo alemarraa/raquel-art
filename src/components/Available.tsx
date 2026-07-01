@@ -1,4 +1,5 @@
 import { artworks } from '../data/artwork'
+import { asset } from '../utils/asset'
 
 export default function Available() {
   const soldWorks = artworks.filter(a => a.sold)
@@ -29,7 +30,7 @@ export default function Available() {
             <div key={art.id} className="group relative overflow-hidden bg-card">
               <div className="aspect-square overflow-hidden">
                 <img
-                  src={art.image}
+                  src={asset(art.image)}
                   alt={art.title}
                   className="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 transition-all duration-500"
                 />

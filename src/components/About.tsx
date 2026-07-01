@@ -1,3 +1,5 @@
+import { asset } from '../utils/asset'
+
 export default function About() {
   return (
     <section id="about" className="bg-surface py-24 px-6 lg:px-12 border-t border-dim">
@@ -6,7 +8,7 @@ export default function About() {
           {/* Images */}
           <div className="relative">
             <img
-              src="/artist/studio-wide.png"
+              src={asset('/artist/studio-wide.png')}
               alt="Raquel in her studio"
               className="w-full object-cover"
               style={{ aspectRatio: '4/3' }}
@@ -16,7 +18,7 @@ export default function About() {
             {/* Floating artwork thumbnail */}
             <div className="absolute -bottom-8 -right-4 w-32 h-32 lg:w-40 lg:h-40 overflow-hidden border-2 border-void shadow-2xl">
               <img
-                src="/artwork/dual-faces.png"
+                src={asset('/artwork/dual-faces.png')}
                 alt="Signature work — Duality"
                 className="w-full h-full object-cover"
               />

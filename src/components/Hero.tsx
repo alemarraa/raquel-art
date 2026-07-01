@@ -3,7 +3,7 @@ import { motion, AnimatePresence, useInView } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
 
 const VIDEO_URL =
-  'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260619_191346_9d19d66e-86a4-47f7-8dc6-712c1788c3b2.mp4'
+  'https://d8j0ntlcm91z4.cloudfront.net/user_3F0rtuqhVXOrvbhcD2uKbDzBqES/hf_20260630_215337_a7b04717-b597-4095-9430-7dc5a7135090.mp4'
 
 const navLinks = [
   { label: 'Wander', href: '#gallery' },
