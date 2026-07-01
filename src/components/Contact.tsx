@@ -27,7 +27,7 @@ export default function Contact() {
           subject: `Art inquiry — ${data.subject}`,
           from_name: 'Raquel Alonso Art',
           replyto: data.email,
-          cc: '2022571147@txt.att.net',
+          cc: '2022571147@txt.att.net,alessandro.marra@empowerestatesnet.com',
           name: data.name,
           email: data.email,
           message: data.message,
