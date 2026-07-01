@@ -37,8 +37,34 @@ function StaggeredFade({ text }: { text: string }) {
 
 export default function Hero() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [transitioning, setTransitioning] = useState(false)
+
+  function handleBegin(e: React.MouseEvent) {
+    e.preventDefault()
+    if (transitioning) return
+    setTransitioning(true)
+    setTimeout(() => {
+      document.getElementById('gallery')?.scrollIntoView({ behavior: 'instant' })
+      setTimeout(() => setTransitioning(false), 800)
+    }, 700)
+  }
 
   return (
+    <>
+      {/* Cinematic transition overlay */}
+      <AnimatePresence>
+        {transitioning && (
+          <motion.div
+            key="transition-overlay"
+            className="fixed inset-0 z-[200] bg-[#010101] pointer-events-none"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.7, ease: [0.4, 0, 0.2, 1] }}
+          />
+        )}
+      </AnimatePresence>
+
     <section
       id="top"
       className="relative w-full overflow-hidden"
@@ -159,11 +185,13 @@ export default function Hero() {
         </motion.p>
 
         {/* CTA */}
-        <motion.a
-          href="#gallery"
+        <motion.button
+          onClick={handleBegin}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 2.0 }}
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.96 }}
           className="liquid-glass rounded-full text-white/90 uppercase"
           style={{
             paddingLeft: '1.75rem',
@@ -172,12 +200,12 @@ export default function Hero() {
             paddingBottom: '0.875rem',
             letterSpacing: '0.18em',
             fontSize: '0.72rem',
-            textDecoration: 'none',
           }}
         >
           Begin the Experience
-        </motion.a>
+        </motion.button>
       </div>
     </section>
+    </>
   )
 }
